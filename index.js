@@ -7,7 +7,6 @@ const cors = require('cors');
 const app = express();
 const db = new sqlite3.Database('./users.db');
 
-// Setup DB table
 db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,12 +16,10 @@ db.serialize(() => {
   )`);
 });
 
-// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Signup endpoint
 app.post('/api/signup', (req, res) => {
   const { username, password, email } = req.body;
   db.run(
@@ -37,7 +34,6 @@ app.post('/api/signup', (req, res) => {
   );
 });
 
-// Login endpoint
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   db.get(
@@ -50,7 +46,6 @@ app.post('/api/login', (req, res) => {
   );
 });
 
-// Fallback to index.html for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
